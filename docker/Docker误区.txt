@@ -1,0 +1,70 @@
+Docker误区+技巧+转换关系
+ 
+
+1. 误区：容器重启或者机器重启会丢失容器内的数据
+
+根据https://docs.docker.com/faq/上的问答和本人的实践，在docker容器内创建文件和安装软件，做下面的操作都不会丢失数据和软件：
+A. exit
+sudo docker start b430d6f4ff00
+
+B. sudo docker stop b430d6f4ff00
+sudo docker start b430d6f4ff00
+
+C. reboot host
+
+https://docs.docker.com/faq/
+Do I lose my data when the container exits?
+Not at all! Any data that your application writes to disk gets preserved in its container until you explicitly delete the container. The file system for the container persists even after the container halts.
+
+ 
+
+2. 如何进入或者退出docker容器？以及如何在主机上对正在运行的容器执行命令？
+
+除了之前介绍的用nsenter:http://blog.csdn.net/yangzhenping/article/details/42297205
+
+
+还可以使用attach选项：
+sudo docker run --name ubuntu_bash -i -t ubuntu:latest /bin/bash
+sudo docker ps -l
+sudo docker attach b430d6f4ff00
+
+
+如何退出容器而不停止容器？
+组合键：Ctrl+P+Q
+
+另外，如果想对容器执行命令，可以使用exec选项：
+$ sudo docker exec -d ubuntu_bash touch /tmp/execWorks
+容器中以后台进程运行touch /tmp/execWorks命令（就是在/tmp目录下创建一个新的文件execWorks）
+
+ 
+
+另外有人想直接用ssh去连接上容器的想法，虽然可以，但是有很多弊端，而且docker已经提供了容器内执行的命令，没有必要再折腾每一个容器为sshd服务器
+具体为什么不使用，可以看下这篇文章：http://jpetazzo.github.io/2014/06/23/docker-ssh-considered-evil/
+
+ 
+
+3. 关于几个容器和镜像以及文件的转化关系：
+
+参考：http://tuhrig.de/difference-between-save-and-export-in-docker/
+
+ 
+
+容器转成镜像：
+sudo docker commit <CONTAINER ID> imagename01
+
+容器转成文件：
+sudo docker export <CONTAINER ID> > /home/export.tar
+
+镜像转成文件：
+sudo docker save imagename01 > /home/save.tar
+注：一般情况下，save.tar比export.tar大一点点而已，export比较小，因为它丢失了历史和数据元metadata
+
+文件转成镜像：
+cat /home/export.tar | sudo docker import - imagename02:latest
+
+save.tar文件转成镜像：
+docker load < /home/save.tar
+
+查看转成的镜像：sudo docker images
+
+注意：这里一个镜像经过n次转化之后，可以用sudo docker images --tree查看历史，用docker tag <LAYER ID> <IMAGE NAME>你可以回到某个层（只针对save命令可以回到某个层！）
