@@ -2,7 +2,7 @@ username=user
 pidname=vi
 count=0
 while true ;do
-pid=$(pgrep -u $username $pidname)
+pid=$(pgrep -u $username $pidname) # ps ax| grep '/sbin/dhclient' | grep -v 'grep' | awk '{print $1}'
 for i in $pid ;do
         echo "wait 5 second"
         sleep 5
