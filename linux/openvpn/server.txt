@@ -1,0 +1,27 @@
+local 172.16.26.80
+port 9443
+proto tcp
+dev tap
+server 172.30.31.0 255.255.255.0
+keepalive 10 180
+cipher AES-256-CBC
+auth SHA1
+ca "C:\\Program Files\\OPENVPN\\KEY\\ca.crt"
+cert "C:\\Program Files\\OPENVPN\\KEY\\server.crt"
+key "C:\\Program Files\\OPENVPN\\KEY\\server.key"
+dh "C:\\Program Files\\OPENVPN\\KEY\\dh1024.pem"
+#push "redirect-gateway def1"
+#push "route 0.0.0.0 0.0.0.0"
+#push "dhcp-option DNS 202.102.192.68"
+push route "10.229.0.0 255.255.0.0 172.30.31.1"
+push route "10.246.0.0 255.255.0.0 172.30.31.1"
+push route "10.178.0.0 255.255.0.0 172.30.31.1"
+push route "10.1.0.0 255.255.0.0 172.30.31.1"
+push route "10.2.0.0 255.255.0.0 172.30.31.1"
+push route "10.3.0.0 255.255.0.0 172.30.31.1"
+push route "10.4.0.0 255.255.0.0 172.30.31.1"
+mode server
+tls-server
+status "C:\\Program Files\\OPENVPN\\log\\openvpn-status.log"
+comp-lzo
+verb 3
