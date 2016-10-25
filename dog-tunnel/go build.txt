@@ -1,0 +1,5 @@
+go build -ldflags "-w -s"
+
+
+
+set GOARCH=386
