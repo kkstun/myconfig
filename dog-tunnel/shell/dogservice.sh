@@ -1,0 +1,1 @@
+/home/myuser/serverdir/dog/dtunnel_s -addr :5005 -addrudp :56701 >> /root/dogserver.log 2>&1

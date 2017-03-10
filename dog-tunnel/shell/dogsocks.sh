@@ -1,0 +1,1 @@
+/home/myuser/serverdir/dog/dtunnel -reg mysocks -remote 220.178.17.235:5005 -buster 220.178.17.235:56701 -local socks5 -ssl=false >> /root/dogsocks.log 2>&1
